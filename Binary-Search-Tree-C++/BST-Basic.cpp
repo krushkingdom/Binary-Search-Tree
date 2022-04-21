@@ -4,8 +4,8 @@ template<typename Type>
 class Node
 {
     public:
-        Node(): data(NULL), less(NULL), greater(NULL){};
-        Node(Type input): data(input), less(NULL), greater(NULL){};
+        Node(): data(NULL), lesser(NULL), greater(NULL){};
+        Node(Type input): data(input), lesser(NULL), greater(NULL){};
         ~Node();
 
         bool operator==(const Node& rhs)
@@ -40,17 +40,41 @@ class Node
             {
                 temp = 
             }
-        }
+        }   
 */
+    Type get_data()
+    {
+        return this->data;
+    }
+
+    void set_data(Type input_data)
+    {
+        this->data = input_data;
+    }
+
+    Node* get_lesser()
+    {
+        return this->lesser;
+    }
 
     Node* get_greater()
     {
         return this->greater;
     }
+
+    void set_lesser(Node* lesser_input)
+    {
+        this->lesser = lesser_input;
+    }
+
+    void set_greater(Node* greater_input)
+    {
+        this->greater = greater_input;
+    }
         
     private:
         Type data;
-        Node* less;
+        Node* lesser;
         Node* greater;
 };
 
@@ -73,16 +97,16 @@ class BST
             }
             if(child.data >= this->root.data)
             {
-                this->root->greater = child;
+                this->root.set_greater(child);
             }
             else
             {
-                this->root->less = child;
+                this->root.set_lesser(child);
             }
 
             tree.push_back(child);
 
-            if((this->root->greater) != NULL && (this->root->less != NULL))
+            if((this->root.get_greater()) != NULL && (this->root.get_lesser() != NULL))
             {
                 height++;
             }
@@ -95,6 +119,8 @@ class BST
             {
                 temp = temp.get_greater();
             }
+
+            temp.set_greater(child);
 
         }
         void insert(Node& child)
