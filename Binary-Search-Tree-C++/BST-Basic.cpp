@@ -1,32 +1,37 @@
 #include <bits/stdc++.h>
 
-template<typename Type>
+template <class Type>
 class Node
 {
     public:
         Node(): data(NULL), lesser(NULL), greater(NULL){};
-        Node(Type input): data(input), lesser(NULL), greater(NULL){};
-        ~Node();
+        Node(Type& input): data(input), lesser(NULL), greater(NULL){};
+        
+        ~Node(){
+            delete lesser;
+            delete greater;
+            delete this;
+        }
 
-        bool operator==(const Node& rhs)
+        bool operator==(Node& rhs)
         {
             if(this->data == rhs.data)
             {
                 return true;
             }
                 return false;
-        }//
+        }
 
-        Node& operator=(const Node& other)
+        Node& operator=(Node& other)
         {
-            if(this == &other)
+            if(this == other)
             {
                 return *this;
             }
 
             this->data = other.data;
             return *this;
-        }
+        } 
 /* //Testing //Testing Github Changes////
         bool gets_greater()
         {
@@ -47,47 +52,60 @@ class Node
         return this->data;
     }
 
-    void set_data(Type input_data)
+    void set_data(Type& input_data)
     {
         this->data = input_data;
     }
 
-    Node* get_lesser()
+    Node<Type>* get_lesser()
     {
         return this->lesser;
     }
 
-    Node* get_greater()
+    Node<Type>* get_greater()
     {
         return this->greater;
     }
 
-    void set_lesser(Node* lesser_input)
+    void set_lesser(Node<Type>& lesser_input)
     {
         this->lesser = lesser_input;
     }
 
-    void set_greater(Node* greater_input)
+    void set_greater(Node<Type>& greater_input)
     {
         this->greater = greater_input;
     }
         
     private:
         Type data;
-        Node* lesser;
-        Node* greater;
+        Node<Type>* lesser = new Node<Type>();
+        Node<Type>* greater = new Node<Type>();
 };
 
-template<class Node>
+//template<class Node>
+template<class Node_Type>
 class BST
 {
     public:
         BST(): root(NULL), height(0){}
-        BST(Node& inroot): root(inroot), height(1){
-            tree.push_back(root);
+        BST(Node<Node_Type>& inroot): height(1){
+            root->
+            tree[0].push_back(root);
         }
-        ~BST();
-
+        /*
+        BST(Node<Node_Type> inroot): root(inroot), height(1){
+            tree[0].push_back(root);
+        }
+         BST(Node<Node_Type>* inroot): root(inroot), height(1){
+            tree[0].push_back(root);
+        }*/
+        
+        ~BST(){
+            delete root;
+            delete this;
+        }
+/*
         void insert_after_root(Node& child)
         {
             if(this->root == NULL)
@@ -110,30 +128,46 @@ class BST
             {
                 height++;
             }
-        }
+        } */
 
-        bool insert_while_greater_exists(Node& child)
+        void insert_while_not_null(Node<Node_Type>& child)
         {
-            Node* temp = this->root;
-            while(temp.get_greater() != NULL)
+            Node<Node_Type>* temp = this->root;
+            while(temp->get_greater() != NULL || temp->get_lesser() != NULL)
             {
-                temp = temp.get_greater();
+                if(child.get_data() >= temp->get_data())
+                {
+                     temp = temp->get_greater();
+                }
+                else
+                {
+                    temp = temp->get_lesser();
+                }
+               
             }
 
-            temp.set_greater(child);
+             if(child.get_data() >= temp->get_data())
+                {
+                     temp->set_greater(child);
+                }
+                else
+                {
+                    temp->set_lesser(child);
+                }
 
         }
+        /*
         void insert(Node& child)
         {
             if(child.data >= this->root.data)
             {
                 this->root->greater = child;
             }
-        }
+        }*/
     private:
-        Node* root = new Node();
-        std::vector<Node*> level;
-        std::vector<std::vector<Node*>> tree;
+        Node<Node_Type>* root = new Node<Node_Type>();
+        std::vector<Node<Node_Type>*> level;
+        std::vector<std::vector<Node<Node_Type>*>> tree;
         int height;
 };
 
@@ -142,8 +176,14 @@ int main(int argc, char * argv[])
 {
     //At their core, Binary Search Tress are really just Decision Trees
     //Linked Lists could be considered like "'Unary' Search Trees"
-    Node root(5);
-    
+    int num = 6;
+    Node<int> * root_node = new Node<int>(num);
 
+    std::cout << root_node->get_data() << std::endl;
+
+    BST<Node<int>> * bst_tree = new BST<Node<int>>();
+
+
+    //delete root_node;
     return 0;
 }
